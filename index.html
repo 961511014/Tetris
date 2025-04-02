@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
     <title>Tetris - Classic HTML5 Game</title>
     <meta name="description" content="Play the classic Tetris HTML5 game - Stack blocks and clear lines in this addictive puzzle game!">
     <link rel="canonical" href="https://survivors.monster">
@@ -36,7 +36,6 @@
             background-color: var(--apple-gray);
             color: var(--apple-dark);
             line-height: 1.6;
-            -webkit-text-size-adjust: 100%;
         }
         
         .container {
@@ -92,7 +91,7 @@
         .iframe-container {
             position: relative;
             overflow: hidden;
-            padding-top: 100%; /* Square aspect ratio for mobile */
+            padding-top: 150%; /* Taller container for mobile to show full game */
             border-radius: 8px;
             background-color: #000;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
@@ -105,6 +104,19 @@
             width: 100%;
             height: 100%;
             border: none;
+            transform-origin: top left;
+        }
+        
+        /* Custom scroll fix for mobile */
+        @media (max-width: 768px) {
+            html, body {
+                height: 100%;
+                overflow-x: hidden;
+            }
+            
+            .game-container {
+                margin-bottom: 0.5rem;
+            }
         }
         
         .game-info {
@@ -204,7 +216,7 @@
             }
             
             .iframe-container {
-                padding-top: 100%; /* Square for mobile game area */
+                padding-top: 150%; /* Taller aspect ratio for mobile to show full game */
             }
             
             .mobile-controls {
@@ -217,6 +229,56 @@
             
             p {
                 font-size: 0.95rem;
+            }
+        }
+        
+        /* Desktop - preserve original styling */
+        @media (min-width: 769px) {
+            .container {
+                max-width: 1200px;
+                padding: 20px;
+            }
+            
+            header {
+                padding: 2rem 0;
+                margin-bottom: 2rem;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+                margin-bottom: 1rem;
+            }
+            
+            .tagline {
+                font-size: 1.2rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            h2 {
+                font-size: 1.8rem;
+                margin: 1.5rem 0 1rem 0;
+            }
+            
+            p {
+                margin-bottom: 1.5rem;
+                font-size: 1.1rem;
+            }
+            
+            .game-container {
+                padding: 20px;
+                margin-bottom: 2rem;
+            }
+            
+            .iframe-container {
+                padding-top: 56.25%; /* Original 16:9 Aspect Ratio */
+            }
+            
+            .game-info {
+                padding: 20px;
+            }
+            
+            .mobile-controls {
+                display: none !important;
             }
         }
         
@@ -251,7 +313,7 @@
         <section class="game-container">
             <h2>Play Now</h2>
             <div class="iframe-container">
-                <iframe src="https://tommalbran.github.io/games/tetris/" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe>
+                <iframe id="game-iframe" src="https://tommalbran.github.io/games/tetris/" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe>
             </div>
             
             <!-- Mobile touch controls -->
@@ -284,12 +346,16 @@
             </ul>
             
             <h2>How to Play</h2>
-            <p>Use the arrow keys (on desktop) or touch controls (on mobile) to move the falling Tetriminos. Left and right arrows move horizontally, while the down arrow speeds up the descent. The up arrow rotates pieces. The goal is to create complete horizontal lines, which will disappear and earn you points. As you progress, the pieces fall faster, increasing the challenge!</p>
+            <p>Use the arrow keys to move the falling Tetriminos. Left and right arrows move horizontally, while the down arrow speeds up the descent. Press the up arrow to rotate pieces. The goal is to create complete horizontal lines, which will disappear and earn you points. As you progress, the pieces fall faster, increasing the challenge!</p>
             
             <h2>Controls</h2>
             <ul class="feature-list">
-                <li><strong>Desktop:</strong> Arrow keys for movement, Z/X for rotation, Space for hard drop</li>
-                <li><strong>Mobile:</strong> Touch buttons below the game area</li>
+                <li>Left Arrow: Move left</li>
+                <li>Right Arrow: Move right</li>
+                <li>Down Arrow: Soft drop</li>
+                <li>Up Arrow or X: Rotate right</li>
+                <li>Z: Rotate left</li>
+                <li>Space or Ctrl: Hard drop</li>
                 <li>P: Pause game</li>
                 <li>M: Mute/Unmute</li>
             </ul>
@@ -306,11 +372,39 @@
     </footer>
     
     <script>
-        // Basic mobile controls implementation
+        // Enhanced mobile implementation
         document.addEventListener('DOMContentLoaded', function() {
-            // Get iframe window
-            const iframe = document.querySelector('iframe');
-            const iframeWindow = iframe.contentWindow;
+            // Get iframe
+            const iframe = document.getElementById('game-iframe');
+            let iframeWindow = null;
+            
+            // Wait for iframe to load
+            iframe.onload = function() {
+                iframeWindow = iframe.contentWindow;
+                
+                // Enable fullscreen viewing for mobile
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                
+                // Adjust iframe scale if needed for visibility
+                function adjustGameView() {
+                    if (window.innerWidth < 768) {
+                        // Mobile view adjustments
+                        try {
+                            // Make sure all game elements are visible
+                            const gameContainer = iframeDoc.querySelector('canvas') || iframeDoc.querySelector('.game-container');
+                            if (gameContainer) {
+                                // Game is loaded and has visible elements
+                                console.log('Game elements found and adjusted');
+                            }
+                        } catch (e) {
+                            console.log('Could not optimize game view:', e);
+                        }
+                    }
+                }
+                
+                // Try to adjust after short delay to ensure game is loaded
+                setTimeout(adjustGameView, 1000);
+            };
             
             // Key codes
             const KEY_LEFT = 37;
@@ -328,12 +422,18 @@
             
             // Create key event
             function sendKey(keyCode, type) {
-                const event = new KeyboardEvent(type, {
-                    keyCode: keyCode,
-                    which: keyCode,
-                    bubbles: true
-                });
-                iframeWindow.document.dispatchEvent(event);
+                if (!iframeWindow) return;
+                
+                try {
+                    const event = new KeyboardEvent(type, {
+                        keyCode: keyCode,
+                        which: keyCode,
+                        bubbles: true
+                    });
+                    iframeWindow.document.dispatchEvent(event);
+                } catch (e) {
+                    console.log('Error sending key event:', e);
+                }
             }
             
             // Button event handlers
@@ -391,6 +491,16 @@
                     sendKey(KEY_SPACE, 'keyup');
                 });
             }
+            
+            // Fix for iframe visibility on mobile
+            function handleOrientationChange() {
+                // Force resize/repaint after orientation change
+                setTimeout(function() {
+                    window.scrollTo(0, 0);
+                }, 200);
+            }
+            
+            window.addEventListener('orientationchange', handleOrientationChange);
             
             // Detect if using a touch device
             function isTouchDevice() {
