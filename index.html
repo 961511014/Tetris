@@ -1,4 +1,15 @@
-<!DOCTYPE html>
+// Detect if using a touch device
+            function isTouchDevice() {
+                return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            }
+            
+            // Show mobile controls only on touch devices
+            if (isTouchDevice()) {
+                const mobileControls = document.querySelector('.mobile-controls');
+                if (mobileControls) {
+                    mobileControls.style.display = 'block';
+                }
+            }<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -91,7 +102,7 @@
         .iframe-container {
             position: relative;
             overflow: hidden;
-            padding-top: 150%; /* Taller container for mobile to show full game */
+            padding-top: 180%; /* Even taller container to show full menu screen */
             border-radius: 8px;
             background-color: #000;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
@@ -116,6 +127,17 @@
             
             .game-container {
                 margin-bottom: 0.5rem;
+                overflow: hidden;
+            }
+            
+            /* Control buttons adjustments for better positioning */
+            .control-row {
+                margin-bottom: 0.3rem;
+            }
+            
+            .control-btn {
+                width: 50px;
+                height: 50px;
             }
         }
         
@@ -216,7 +238,7 @@
             }
             
             .iframe-container {
-                padding-top: 150%; /* Taller aspect ratio for mobile to show full game */
+                padding-top: 180%; /* Taller aspect ratio to show complete menu */
             }
             
             .mobile-controls {
@@ -328,6 +350,7 @@
                 </div>
                 <div class="control-row">
                     <button class="control-btn" id="drop">⬇⬇</button>
+                    <button class="control-btn" id="start">▶</button>
                 </div>
             </div>
         </section>
@@ -502,17 +525,19 @@
             
             window.addEventListener('orientationchange', handleOrientationChange);
             
-            // Detect if using a touch device
-            function isTouchDevice() {
-                return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-            }
+            // Additional button for menu selection
+            const startBtn = document.getElementById('start');
             
-            // Show mobile controls only on touch devices
-            if (isTouchDevice()) {
-                const mobileControls = document.querySelector('.mobile-controls');
-                if (mobileControls) {
-                    mobileControls.style.display = 'block';
-                }
+            if (startBtn) {
+                startBtn.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    // Send Enter key or Space to select menu items
+                    sendKey(13, 'keydown'); // Enter key
+                });
+                startBtn.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    sendKey(13, 'keyup');
+                });
             }
         });
     </script>
