@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tetris - Classic HTML5 Game</title>
+    <meta name="description" content="Play the classic Tetris HTML5 game - Stack blocks and clear lines in this addictive puzzle game!">
+    <link rel="canonical" href="https://survivors.monster">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-NB01KYYDE5"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-NB01KYYDE5');
+    </script>
+    <style>
+        /* Apple-inspired Color Palette */
+        :root {
+            --apple-blue: #0071e3;
+            --apple-gray: #f5f5f7;
+            --apple-dark: #1d1d1f;
+            --apple-light: #ffffff;
+            --apple-accent: #86868b;
+            --apple-success: #65c466;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        body {
+            background-color: var(--apple-gray);
+            color: var(--apple-dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 1.5rem 0;
+            background-color: var(--apple-light);
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--apple-dark);
+            margin-bottom: 0.8rem;
+        }
+        
+        .tagline {
+            font-size: 1.1rem;
+            color: var(--apple-accent);
+            margin-bottom: 1rem;
+            padding: 0 10px;
+        }
+        
+        h2 {
+            font-size: 1.6rem;
+            color: var(--apple-blue);
+            margin: 1.2rem 0 0.8rem 0;
+            font-weight: 600;
+        }
+        
+        p {
+            margin-bottom: 1.2rem;
+            font-size: 1rem;
+        }
+        
+        .game-container {
+            background-color: var(--apple-light);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .iframe-container {
+            position: relative;
+            overflow: hidden;
+            padding-top: 100%; /* Square aspect ratio for mobile */
+            border-radius: 8px;
+            background-color: #000;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .iframe-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .game-info {
+            background-color: var(--apple-light);
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-list {
+            list-style-type: none;
+            margin: 0.8rem 0;
+        }
+        
+        .feature-list li {
+            margin-bottom: 0.7rem;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+        
+        .feature-list li::before {
+            content: "•";
+            color: var(--apple-blue);
+            font-weight: bold;
+            font-size: 1.2rem;
+            position: absolute;
+            left: 0;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background-color: var(--apple-blue);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 1rem;
+            transition: background-color 0.3s ease;
+        }
+        
+        .cta-button:hover {
+            background-color: #0058b0;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 1.5rem 0;
+            color: var(--apple-accent);
+            font-size: 0.8rem;
+        }
+        
+        /* Mobile Controls for Touch Devices */
+        .mobile-controls {
+            display: none;
+            margin-top: 1rem;
+        }
+        
+        .control-row {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .control-btn {
+            background-color: var(--apple-blue);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            width: 60px;
+            height: 60px;
+            margin: 0 5px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .control-btn:active {
+            background-color: #0058b0;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            h2 {
+                font-size: 1.4rem;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            .iframe-container {
+                padding-top: 100%; /* Square for mobile game area */
+            }
+            
+            .mobile-controls {
+                display: block;
+            }
+            
+            .feature-list li {
+                font-size: 0.95rem;
+            }
+            
+            p {
+                font-size: 0.95rem;
+            }
+        }
+        
+        /* Desktop - preserve original styling */
+        @media (min-width: 769px) {
+            .container {
+                max-width: 1200px;
+                padding: 20px;
+            }
+            
+            header {
+                padding: 2rem 0;
+                margin-bottom: 2rem;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+                margin-bottom: 1rem;
+            }
+            
+            .tagline {
+                font-size: 1.2rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            h2 {
+                font-size: 1.8rem;
+                margin: 1.5rem 0 1rem 0;
+            }
+            
+            p {
+                margin-bottom: 1.5rem;
+                font-size: 1.1rem;
+            }
+            
+            .game-container {
+                padding: 20px;
+                margin-bottom: 2rem;
+            }
+            
+            .iframe-container {
+                padding-top: 56.25%; /* Original 16:9 Aspect Ratio */
+            }
+            
+            .game-info {
+                padding: 20px;
+            }
+            
+            .mobile-controls {
+                display: none !important;
+            }
+        }
+        
+        /* Small mobile phones */
+        @media (max-width: 375px) {
+            h1 {
+                font-size: 1.6rem;
+            }
+            
+            .tagline {
+                font-size: 1rem;
+            }
+            
+            h2 {
+                font-size: 1.3rem;
+            }
+            
+            .control-btn {
+                width: 50px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Tetris</h1>
+            <p class="tagline">Stack blocks and clear lines in this addictive classic puzzle game!</p>
+        </header>
+        
+        <section class="game-container">
+            <h2>Play Now</h2>
+            <div class="iframe-container">
+                <iframe src="https://tommalbran.github.io/games/tetris/" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe>
+            </div>
+            
+            <!-- Mobile touch controls -->
+            <div class="mobile-controls">
+                <div class="control-row">
+                    <button class="control-btn" id="rotate">↻</button>
+                </div>
+                <div class="control-row">
+                    <button class="control-btn" id="left">←</button>
+                    <button class="control-btn" id="down">↓</button>
+                    <button class="control-btn" id="right">→</button>
+                </div>
+                <div class="control-row">
+                    <button class="control-btn" id="drop">⬇⬇</button>
+                </div>
+            </div>
+        </section>
+        
+        <section class="game-info">
+            <h2>Game Description</h2>
+            <p>Tetris is one of the most iconic puzzle games of all time. The objective is simple: arrange falling pieces (Tetriminos) to create complete horizontal lines. When a line is completed, it disappears, giving you more space to work with and earning you points. The game ends when the Tetriminos stack up to the top of the playing field.</p>
+            
+            <h2>Game Features</h2>
+            <ul class="feature-list">
+                <li>Classic Tetris gameplay that's easy to learn but challenging to master</li>
+                <li>Multiple difficulty levels to test your skills</li>
+                <li>High score tracking to compete against yourself</li>
+                <li>Nostalgic design with modern HTML5 implementation</li>
+                <li>Fully optimized for both desktop and mobile play</li>
+            </ul>
+            
+            <h2>How to Play</h2>
+            <p>Use the arrow keys to move the falling Tetriminos. Left and right arrows move horizontally, while the down arrow speeds up the descent. Press the up arrow to rotate pieces. The goal is to create complete horizontal lines, which will disappear and earn you points. As you progress, the pieces fall faster, increasing the challenge!</p>
+            
+            <h2>Controls</h2>
+            <ul class="feature-list">
+                <li>Left Arrow: Move left</li>
+                <li>Right Arrow: Move right</li>
+                <li>Down Arrow: Soft drop</li>
+                <li>Up Arrow or X: Rotate right</li>
+                <li>Z: Rotate left</li>
+                <li>Space or Ctrl: Hard drop</li>
+                <li>P: Pause game</li>
+                <li>M: Mute/Unmute</li>
+            </ul>
+            
+            <h2>About HTML5 Games</h2>
+            <p>HTML5 games like Tetris offer seamless gameplay across all modern devices without requiring any plugins or downloads. They're perfect for quick gaming sessions during breaks or when you need a fun distraction.</p>
+            
+            <a href="#" class="cta-button">Explore More Games</a>
+        </section>
+    </div>
+    
+    <footer>
+        <p>&copy; 2025 Your Gaming Website. All rights reserved. This game was created by <a href="https://github.com/TomMalbran" target="_blank">Tom Malbran</a> and is used under the MIT License.</p>
+    </footer>
+    
+    <script>
+        // Basic mobile controls implementation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get iframe window
+            const iframe = document.querySelector('iframe');
+            const iframeWindow = iframe.contentWindow;
+            
+            // Key codes
+            const KEY_LEFT = 37;
+            const KEY_UP = 38;
+            const KEY_RIGHT = 39;
+            const KEY_DOWN = 40;
+            const KEY_SPACE = 32;
+            
+            // Control buttons
+            const leftBtn = document.getElementById('left');
+            const rightBtn = document.getElementById('right');
+            const downBtn = document.getElementById('down');
+            const rotateBtn = document.getElementById('rotate');
+            const dropBtn = document.getElementById('drop');
+            
+            // Create key event
+            function sendKey(keyCode, type) {
+                const event = new KeyboardEvent(type, {
+                    keyCode: keyCode,
+                    which: keyCode,
+                    bubbles: true
+                });
+                iframeWindow.document.dispatchEvent(event);
+            }
+            
+            // Button event handlers
+            if (leftBtn) {
+                leftBtn.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    sendKey(KEY_LEFT, 'keydown');
+                });
+                leftBtn.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    sendKey(KEY_LEFT, 'keyup');
+                });
+            }
+            
+            if (rightBtn) {
+                rightBtn.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    sendKey(KEY_RIGHT, 'keydown');
+                });
+                rightBtn.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    sendKey(KEY_RIGHT, 'keyup');
+                });
+            }
+            
+            if (downBtn) {
+                downBtn.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    sendKey(KEY_DOWN, 'keydown');
+                });
+                downBtn.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    sendKey(KEY_DOWN, 'keyup');
+                });
+            }
+            
+            if (rotateBtn) {
+                rotateBtn.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    sendKey(KEY_UP, 'keydown');
+                });
+                rotateBtn.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    sendKey(KEY_UP, 'keyup');
+                });
+            }
+            
+            if (dropBtn) {
+                dropBtn.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    sendKey(KEY_SPACE, 'keydown');
+                });
+                dropBtn.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    sendKey(KEY_SPACE, 'keyup');
+                });
+            }
+            
+            // Detect if using a touch device
+            function isTouchDevice() {
+                return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            }
+            
+            // Show mobile controls only on touch devices
+            if (isTouchDevice()) {
+                const mobileControls = document.querySelector('.mobile-controls');
+                if (mobileControls) {
+                    mobileControls.style.display = 'block';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
