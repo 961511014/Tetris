@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Tetris - Classic HTML5 Game</title>
     <meta name="description" content="Play the classic Tetris HTML5 game - Stack blocks and clear lines in this addictive puzzle game!">
     <link rel="canonical" href="https://survivors.monster">
@@ -36,6 +36,7 @@
             background-color: var(--apple-gray);
             color: var(--apple-dark);
             line-height: 1.6;
+            -webkit-text-size-adjust: 100%;
         }
         
         .container {
@@ -219,56 +220,6 @@
             }
         }
         
-        /* Desktop - preserve original styling */
-        @media (min-width: 769px) {
-            .container {
-                max-width: 1200px;
-                padding: 20px;
-            }
-            
-            header {
-                padding: 2rem 0;
-                margin-bottom: 2rem;
-            }
-            
-            h1 {
-                font-size: 2.5rem;
-                margin-bottom: 1rem;
-            }
-            
-            .tagline {
-                font-size: 1.2rem;
-                margin-bottom: 1.5rem;
-            }
-            
-            h2 {
-                font-size: 1.8rem;
-                margin: 1.5rem 0 1rem 0;
-            }
-            
-            p {
-                margin-bottom: 1.5rem;
-                font-size: 1.1rem;
-            }
-            
-            .game-container {
-                padding: 20px;
-                margin-bottom: 2rem;
-            }
-            
-            .iframe-container {
-                padding-top: 56.25%; /* Original 16:9 Aspect Ratio */
-            }
-            
-            .game-info {
-                padding: 20px;
-            }
-            
-            .mobile-controls {
-                display: none !important;
-            }
-        }
-        
         /* Small mobile phones */
         @media (max-width: 375px) {
             h1 {
@@ -333,16 +284,12 @@
             </ul>
             
             <h2>How to Play</h2>
-            <p>Use the arrow keys to move the falling Tetriminos. Left and right arrows move horizontally, while the down arrow speeds up the descent. Press the up arrow to rotate pieces. The goal is to create complete horizontal lines, which will disappear and earn you points. As you progress, the pieces fall faster, increasing the challenge!</p>
+            <p>Use the arrow keys (on desktop) or touch controls (on mobile) to move the falling Tetriminos. Left and right arrows move horizontally, while the down arrow speeds up the descent. The up arrow rotates pieces. The goal is to create complete horizontal lines, which will disappear and earn you points. As you progress, the pieces fall faster, increasing the challenge!</p>
             
             <h2>Controls</h2>
             <ul class="feature-list">
-                <li>Left Arrow: Move left</li>
-                <li>Right Arrow: Move right</li>
-                <li>Down Arrow: Soft drop</li>
-                <li>Up Arrow or X: Rotate right</li>
-                <li>Z: Rotate left</li>
-                <li>Space or Ctrl: Hard drop</li>
+                <li><strong>Desktop:</strong> Arrow keys for movement, Z/X for rotation, Space for hard drop</li>
+                <li><strong>Mobile:</strong> Touch buttons below the game area</li>
                 <li>P: Pause game</li>
                 <li>M: Mute/Unmute</li>
             </ul>
