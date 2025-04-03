@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://survivors.monster/sitemap.xml
